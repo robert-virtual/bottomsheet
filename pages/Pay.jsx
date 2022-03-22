@@ -1,26 +1,30 @@
 import { CardField, useConfirmPayment } from "@stripe/stripe-react-native";
 import axios from "axios";
 import { useState } from "react";
-import { Text, StyleSheet, View, Button, TextInput, Alert } from "react-native";
+import { StyleSheet, View, Button, TextInput, Alert } from "react-native";
 export function Pay() {
   const [name, setName] = useState("");
-  const { confirmPayment, loading } = useConfirmPayment();
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { confirmPayment } = useConfirmPayment();
   async function handlePay() {
     try {
-      const { data } = await axios.post(
-        "http://192.168.0.21:4242/create-payment-intent",
-        {
-          currency: "usd",
-          paymentMethodType: "card",
-        }
-      );
+      setLoading(true);
+      const { data } = await axios.post("/create-payment-intent", {
+        productos: [
+          { id: 2, cantidad: 2 },
+          { id: 6, cantidad: 1 },
+        ],
+        email,
+      });
       const { paymentIntent, error } = await confirmPayment(data.clientSecret, {
         type: "Card",
-
         billingDetails: {
           name,
+          email,
         },
       });
+      setLoading(false);
       if (error) {
         Alert.alert("Payment Error", error.message);
         return;
@@ -38,6 +42,13 @@ export function Pay() {
         underlineColorAndroid="blue"
         value={name}
         onChangeText={setName}
+      />
+      <TextInput
+        placeholder="Correo"
+        style={{ padding: 15 }}
+        underlineColorAndroid="blue"
+        value={email}
+        onChangeText={setEmail}
       />
       <CardField
         postalCodeEnabled={false}
