@@ -14,7 +14,6 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT * 0.95;
 export function ButtomSheet({
   children,
-  draggable = false,
   height = SCREEN_HEIGHT / 3,
   visible = false,
 }) {
@@ -77,13 +76,15 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT,
     width: "100%",
     top: SCREEN_HEIGHT,
+    backgroundColor: "red",
+    padding: 5,
   },
   content: {
     zIndex: 998,
     borderRadius: 25,
     padding: 15,
     backgroundColor: "#f3f3f3",
-    height: "100%",
+    height: "50%",
   },
   line: {
     alignSelf: "center",
